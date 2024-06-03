@@ -20,7 +20,7 @@ class HomeScreenViewModel(
         >(
     config = BallastViewModelConfiguration.Builder()
         .withViewModel(
-            initialState = HomeScreenContract.State(noteList = noteRepository.getNotes() ),
+            initialState = HomeScreenContract.State(noteList = emptyList()),
             inputHandler = HomeScreenInputHandler(noteRepository),
         )
         .build(),

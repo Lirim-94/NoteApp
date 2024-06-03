@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("androidx.room")
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
 }
 
 android {
@@ -18,6 +20,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     buildTypes {
@@ -53,6 +59,7 @@ dependencies {
     val ktxDateTimeVersion = "0.6.0-RC.2"
     val ballastVersion = "4.0.0"
 
+    implementation("com.google.devtools.ksp:symbol-processing-api:2.0.0-1.0.21")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$ktxDateTimeVersion")
     implementation("io.github.copper-leaf:ballast-navigation:$ballastVersion")
     implementation("io.github.copper-leaf:ballast-core:$ballastVersion")
@@ -67,6 +74,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    annotationProcessor("androidx.room:room-compiler:${libs.versions.room.get()}")
+    ksp("androidx.room:room-compiler:${libs.versions.room.get()}")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

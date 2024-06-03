@@ -6,11 +6,11 @@ class NoteRepository(
     private val dao: NoteDao
 )  {
 
-      fun getNotes(): MutableList<Note> {
+    suspend fun getNotes(): MutableList<Note> { // Needs to suspend or it will lock the UI
         return dao.getNotes()
     }
 
-       suspend fun getNoteById(id: Int): Note? {
+    suspend fun getNoteById(id: Int): Note? {
         return dao.getNoteById(id)
     }
 

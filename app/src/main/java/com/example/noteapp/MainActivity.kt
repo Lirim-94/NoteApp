@@ -27,6 +27,7 @@ import com.copperleaf.ballast.navigation.routing.currentRouteOrNull
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.example.noteapp.home.HomeScreen
+import com.example.noteapp.home.HomeScreenContract
 import com.example.noteapp.home.HomeScreenViewModel
 import com.example.noteapp.model.NoteRepository
 import com.example.noteapp.nav.AppScreen
@@ -41,10 +42,8 @@ class MainActivity : ComponentActivity() {
 
         val application = application as NoteApplication
 
-
         setContent {
-
-                    RootLayout(noteRepository = application.noteRepo)
+            RootLayout(noteRepository = application.noteRepo)
         }
     }
 }
@@ -84,10 +83,10 @@ fun RootLayout(
                     Surface(Modifier.padding(rootPadding)) {
                         when (appScreen) {
                             AppScreen.Home -> {
-                                val homeVm = remember {
-                                    HomeScreenViewModel(scope, router, noteRepository)
-                                }
+                                val homeVm = remember { HomeScreenViewModel(scope, router, noteRepository) }
                                 val state by homeVm.observeStates().collectAsState()
+                                homeVm.trySend(HomeScreenContract.Inputs.InitialiseState) // Initialise state
+
                                 HomeScreen(state = state) { homeVm.trySend(it) }
                             }
                             
