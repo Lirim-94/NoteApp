@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.tooling.preview.Preview
 import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
@@ -34,6 +33,8 @@ import com.example.noteapp.nav.AppScreen
 import com.example.noteapp.nav.RouterViewModel
 import com.example.noteapp.note.create.CreateNoteScreen
 import com.example.noteapp.note.create.CreateNoteScreenViewModel
+import com.example.noteapp.note.update.UpdateNoteScreen
+import com.example.noteapp.note.update.UpdateNoteScreenViewModel
 import com.example.noteapp.ui.theme.NoteAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -102,9 +103,9 @@ fun RootLayout(
                             AppScreen.UpdateNote -> {
                                 val noteId = this@renderCurrentDestination.pathParameters["note_id"]?.first()
                                 require(noteId != null)
-                                val noteVm = remember { CreateNoteScreenViewModel(scope, router, noteRepository)}
+                                val noteVm = remember { UpdateNoteScreenViewModel(scope, router, noteRepository, noteId) }
                                 val state by noteVm.observeStates().collectAsState()
-                                CreateNoteScreen(state = state) { noteVm.trySend(it) }
+                                UpdateNoteScreen(state = state) { noteVm.trySend(it) }
                             }
                         }
                         

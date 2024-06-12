@@ -27,7 +27,7 @@ class HomeScreenEventHandler(
             is HomeScreenContract.Events.NavigateToUpdateNoteScreen -> {
                 router.trySend(RouterContract.Inputs.GoToDestination(AppScreen.UpdateNote
                     .directions()
-                    .pathParameter("session_id", event.noteId)
+                    .pathParameter("note_id", event.noteId)
                     .build()))
 
             }
