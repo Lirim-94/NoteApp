@@ -41,6 +41,8 @@ class UpdateNoteScreenInputHandler(
                 noteRepo.updateSession(updatedNote)
                 postEvent(UpdateNoteScreenContract.Events.GoBackToHome)
             }
+
+            is UpdateNoteScreenContract.Inputs.DeleteNote -> { noteRepo.deleteNote(note) }
         }
     }
 

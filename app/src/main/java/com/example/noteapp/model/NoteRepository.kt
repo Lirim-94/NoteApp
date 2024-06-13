@@ -6,7 +6,6 @@ class NoteRepository(
     private val dao: NoteDao
 ) {
 
-    private var notes = mutableListOf<Note>()
     fun getNotes(): MutableList<Note> { // Needs to suspend or it will lock the UI
         return dao.getNotes()
     }

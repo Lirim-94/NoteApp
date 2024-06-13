@@ -2,6 +2,7 @@ package com.example.noteapp.home
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import com.example.noteapp.model.Note
 import com.example.noteapp.model.NoteRepository
 
 
@@ -15,7 +16,12 @@ class HomeScreenInputHandler(private val noteRepo: NoteRepository) : HomeScreenC
 
         is HomeScreenContract.Inputs.NavigateToUpdate -> postEvent(HomeScreenContract.Events.NavigateToUpdateNoteScreen(input.note.id))
 
-        is HomeScreenContract.Inputs.DeleteNote -> noteRepo.deleteNote(input.note)
+        is HomeScreenContract.Inputs.DeleteNote -> {
+            val notes = noteRepo.getNotes()
+            updateState {
+                it.copy(noteList = notes.remove(input.note))
+            }
+        }
 
         is HomeScreenContract.Inputs.InitialiseState -> {
             val notes = noteRepo.getNotes()

@@ -24,6 +24,7 @@ suspend fun insertNote(note: Note)
 @Delete
 suspend fun deleteNote(note: Note)
 
+
 @Update
 suspend fun updateNote(note: Note)
 
