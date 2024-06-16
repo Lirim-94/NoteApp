@@ -1,8 +1,8 @@
 package com.example.noteapp.note.update
 
+import android.util.Log
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
-import com.example.noteapp.model.Note
 import com.example.noteapp.model.NoteRepository
 
 
@@ -10,47 +10,60 @@ typealias UpdateNoteScreenContractInputHandler = InputHandler<UpdateNoteScreenCo
 typealias UpdateNoteScreenContractInputHandlerScope = InputHandlerScope<UpdateNoteScreenContract.Inputs, UpdateNoteScreenContract.Events, UpdateNoteScreenContract.State>
 
 class UpdateNoteScreenInputHandler(
-    private val note: Note,
     private val noteRepo: NoteRepository
 ) : UpdateNoteScreenContractInputHandler {
 
     override suspend fun UpdateNoteScreenContractInputHandlerScope.handleInput(input: UpdateNoteScreenContract.Inputs) {
         when (input) {
+
+            is UpdateNoteScreenContract.Inputs.Initialise -> {
+                val note = noteRepo.getNoteById(input.noteId)
+                updateState { it.copy(
+                    note = note,
+                    newTitle = it.newTitle.copy(text = note?.title ?: ""),
+                    newContent = it.newContent.copy(note?.content ?: "")
+                ) }
+            }
+
             is UpdateNoteScreenContract.Inputs.ChangeNoteTitle -> {
-                val newState = updateStateAndGet {
-                    it.copy(noteTitle = input.note)
+                val conditions = input.title.text.isNotEmpty() && input.title.text != getCurrentState().note?.title
+
+                updateState {
+                    it.copy(
+                        newTitle = input.title,
+                        isUpdateButtonEnabled = conditions
+                    )
                 }
-                canUpdateNoteButtonBeEnabled(newState)
             }
 
             is UpdateNoteScreenContract.Inputs.ChangeNoteContent -> {
+                val conditions = input.content.text != getCurrentState().note?.content
+
                 val newState = updateStateAndGet {
-                    it.copy(noteContent = input.note)
+                    it.copy(newContent = input.content, isUpdateButtonEnabled = conditions)
                 }
-                canUpdateNoteButtonBeEnabled(newState)
             }
 
             is UpdateNoteScreenContract.Inputs.GoBackToHome -> postEvent(UpdateNoteScreenContract.Events.GoBackToHome)
 
             is UpdateNoteScreenContract.Inputs.UpdateNote -> {
                 val state = getCurrentState()
-                val updatedNote = note.copy(
-                    title = state.noteTitle,
-                    content = state.noteContent
-                )
-                noteRepo.updateSession(updatedNote)
+                state.note?.copy(
+                    title = state.newTitle.text,
+                    content = state.newContent.text
+                )?.let {
+                    noteRepo.updateSession(it)
+                }
                 postEvent(UpdateNoteScreenContract.Events.GoBackToHome)
             }
 
-            is UpdateNoteScreenContract.Inputs.DeleteNote -> { noteRepo.deleteNote(note) }
-        }
-    }
-
-    private suspend fun UpdateNoteScreenContractInputHandlerScope.canUpdateNoteButtonBeEnabled(state: UpdateNoteScreenContract.State) {
-        val createConditions = state.noteTitle != null || state.noteContent != null
-
-        updateState {
-            it.copy(isUpdateButtonEnabled = createConditions)
+            is UpdateNoteScreenContract.Inputs.DeleteNote -> {
+                val note = input?.noteId?.let { noteRepo.getNoteById(it) }
+                note?.let {
+                    noteRepo.deleteNote(note.id)
+                }
+                postEvent(UpdateNoteScreenContract.Events.GoBackToHome)
+            }
         }
     }
 }

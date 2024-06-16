@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
@@ -25,7 +28,11 @@ import com.example.noteapp.model.Note
         state: HomeScreenContract.State,
         postInput: (HomeScreenContract.Inputs) -> Unit
     ) {
-        Column(Modifier.padding(horizontal = 16.dp)) {
+        Column(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
             if (state.noteList.isEmpty()) {
                 Text(
                     text = "Currently no notes",
@@ -41,7 +48,6 @@ import com.example.noteapp.model.Note
                             postInput(HomeScreenContract.Inputs.NavigateToUpdate(it))
                         }, onDeleteClickAction = {
                             postInput(HomeScreenContract.Inputs.DeleteNote(it))
-
                         }
                     )
 
@@ -67,7 +73,7 @@ fun NoteView(
         Text(text = "Title: ${note.title}")
         Divider()
         Text(text = "${note.content}" )
-        IconButton(onClick = { noteViewActions.onDeleteClickAction }) {
+        IconButton(onClick = { noteViewActions.onDeleteClickAction() } ) {
             Icon(painter = rememberVectorPainter(image = Icons.Default.Delete),
                 contentDescription = "Delete note" )
 

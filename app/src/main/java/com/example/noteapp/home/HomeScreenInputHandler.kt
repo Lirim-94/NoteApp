@@ -17,9 +17,11 @@ class HomeScreenInputHandler(private val noteRepo: NoteRepository) : HomeScreenC
         is HomeScreenContract.Inputs.NavigateToUpdate -> postEvent(HomeScreenContract.Events.NavigateToUpdateNoteScreen(input.note.id))
 
         is HomeScreenContract.Inputs.DeleteNote -> {
+            noteRepo.deleteNote(input.note.id)
             val notes = noteRepo.getNotes()
+
             updateState {
-                it.copy(noteList = notes.remove(input.note))
+                it.copy(noteList = notes)
             }
         }
 
