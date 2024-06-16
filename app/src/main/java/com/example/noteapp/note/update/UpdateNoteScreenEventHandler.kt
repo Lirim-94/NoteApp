@@ -6,14 +6,14 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.vm.Router
 import com.example.noteapp.nav.AppScreen
 
-typealias CreateSessionScreenContractEventHandler = EventHandler<UpdateNoteScreenContract.Inputs, UpdateNoteScreenContract.Events, UpdateNoteScreenContract.State>
-typealias CreateSessionScreenContractEventHandlerScope = EventHandlerScope<UpdateNoteScreenContract.Inputs, UpdateNoteScreenContract.Events, UpdateNoteScreenContract.State>
+typealias UpdateNoteScreenContractEventHandler = EventHandler<UpdateNoteScreenContract.Inputs, UpdateNoteScreenContract.Events, UpdateNoteScreenContract.State>
+typealias UpdateNoteScreenContractEventHandlerScope = EventHandlerScope<UpdateNoteScreenContract.Inputs, UpdateNoteScreenContract.Events, UpdateNoteScreenContract.State>
 
 class UpdateNoteScreenEventHandler(
     private val router: Router<AppScreen>
-) : CreateSessionScreenContractEventHandler {
+) : UpdateNoteScreenContractEventHandler {
 
-    override suspend fun CreateSessionScreenContractEventHandlerScope.handleEvent(
+    override suspend fun UpdateNoteScreenContractEventHandlerScope.handleEvent(
         event: UpdateNoteScreenContract.Events
     ) {
         when (event) {

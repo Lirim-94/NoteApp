@@ -57,7 +57,7 @@ android {
 
 dependencies {
     val ktxDateTimeVersion = "0.6.0-RC.2"
-    val ballastVersion = "4.0.0"
+    val ballastVersion = "4.1.0"
 
     implementation("com.google.devtools.ksp:symbol-processing-api:2.0.0-1.0.21")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$ktxDateTimeVersion")

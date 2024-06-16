@@ -6,12 +6,11 @@ class NoteRepository(
     private val dao: NoteDao
 ) {
 
-    private var notes = mutableListOf<Note>()
-    fun getNotes(): MutableList<Note> { // Needs to suspend or it will lock the UI
+    suspend fun getNotes(): MutableList<Note> { // Needs to suspend or it will lock the UI
         return dao.getNotes()
     }
 
-    suspend fun getNoteById(id: Int): Note? {
+    suspend fun getNoteById(id: String): Note? {
         return dao.getNoteById(id)
     }
 
@@ -19,8 +18,8 @@ class NoteRepository(
         dao.insertNote(note)
     }
 
-    suspend fun deleteNote(note: Note) {
-        dao.deleteNote(note)
+    suspend fun deleteNote(noteId: String) {
+        dao.deleteNote(noteId)
     }
 
     suspend fun updateSession(note: Note) {

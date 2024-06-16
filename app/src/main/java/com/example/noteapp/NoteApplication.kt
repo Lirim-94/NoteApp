@@ -14,7 +14,7 @@ class NoteApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val db = Room.databaseBuilder(this, NoteDatabase::class.java, NoteDatabase.DATABASE_NAME).allowMainThreadQueries().build()
+        val db = Room.databaseBuilder(this, NoteDatabase::class.java, NoteDatabase.DATABASE_NAME).build()
         noteRepo = NoteRepository(db.noteDao())
     }
 }

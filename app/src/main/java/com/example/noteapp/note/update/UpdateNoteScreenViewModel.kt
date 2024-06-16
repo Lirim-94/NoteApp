@@ -15,7 +15,6 @@ class UpdateNoteScreenViewModel(
     router: Router<AppScreen>,
     noteRepo: NoteRepository,
     noteId: String,
-    note: Note = noteRepo.getNotes().first { it.id == noteId }
 ) : BasicViewModel<
         UpdateNoteScreenContract.Inputs,
         UpdateNoteScreenContract.Events,
@@ -23,11 +22,8 @@ class UpdateNoteScreenViewModel(
         >(
     config = BallastViewModelConfiguration.Builder()
         .withViewModel(
-            initialState = UpdateNoteScreenContract.State(
-                noteTitle = note.title,
-                noteContent = note.content
-            ),
-            inputHandler = UpdateNoteScreenInputHandler(note, noteRepo),
+            initialState = UpdateNoteScreenContract.State(),
+            inputHandler = UpdateNoteScreenInputHandler(noteRepo),
         )
         .build(),
     eventHandler = UpdateNoteScreenEventHandler(router),
