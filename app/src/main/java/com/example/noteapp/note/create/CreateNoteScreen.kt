@@ -42,6 +42,7 @@ fun CreateNoteScreen(
                 Column {
 
                 TextField(
+                    placeholder = { Text(text = "Title")},
                     value = noteTitle,
                     onValueChange = {
                         noteTitle = it
@@ -49,6 +50,7 @@ fun CreateNoteScreen(
                     })
 
                 TextField(
+                    placeholder = { Text(text = "Write your note here")},
                     value = noteContent,
                     onValueChange = {
                         noteContent = it

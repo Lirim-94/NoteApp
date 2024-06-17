@@ -13,13 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.tooling.preview.Preview
 import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
@@ -34,6 +34,9 @@ import com.example.noteapp.nav.AppScreen
 import com.example.noteapp.nav.RouterViewModel
 import com.example.noteapp.note.create.CreateNoteScreen
 import com.example.noteapp.note.create.CreateNoteScreenViewModel
+import com.example.noteapp.note.update.UpdateNoteScreen
+import com.example.noteapp.note.update.UpdateNoteScreenContract
+import com.example.noteapp.note.update.UpdateNoteScreenViewModel
 import com.example.noteapp.ui.theme.NoteAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -85,7 +88,10 @@ fun RootLayout(
                             AppScreen.Home -> {
                                 val homeVm = remember { HomeScreenViewModel(scope, router, noteRepository) }
                                 val state by homeVm.observeStates().collectAsState()
-                                homeVm.trySend(HomeScreenContract.Inputs.InitialiseState) // Initialise state
+
+                                LaunchedEffect(Unit) {
+                                    homeVm.trySend(HomeScreenContract.Inputs.InitialiseState) // Initialise state
+                                }
 
                                 HomeScreen(state = state) { homeVm.trySend(it) }
                             }
@@ -100,11 +106,16 @@ fun RootLayout(
                                 }
                             }
                             AppScreen.UpdateNote -> {
-                                val noteId = this@renderCurrentDestination.pathParameters["note_id"]?.first()
+                                val noteId = remember { this@renderCurrentDestination.pathParameters["note_id"]?.first() }
                                 require(noteId != null)
-                                val noteVm = remember { CreateNoteScreenViewModel(scope, router, noteRepository)}
+                                val noteVm = remember { UpdateNoteScreenViewModel(scope, router, noteRepository, noteId) }
                                 val state by noteVm.observeStates().collectAsState()
-                                CreateNoteScreen(state = state) { noteVm.trySend(it) }
+
+                                LaunchedEffect(Unit) {
+                                    noteVm.trySend(UpdateNoteScreenContract.Inputs.Initialise(noteId))
+                                }
+
+                                UpdateNoteScreen(state = state) { noteVm.trySend(it) }
                             }
                         }
                         
