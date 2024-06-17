@@ -10,6 +10,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -40,20 +42,24 @@ fun CreateNoteScreen(
             )
         }
                 Column {
-
                 TextField(
+                    placeholder = { Text(
+                        text = "Title")},
                     value = noteTitle,
                     onValueChange = {
                         noteTitle = it
                         postInput(CreateNoteScreenContract.Inputs.ChangeTitle(it))
-                    })
+                    },
+                )
 
                 TextField(
+                    placeholder = { Text(text = "Write your note here")},
                     value = noteContent,
                     onValueChange = {
                         noteContent = it
                         postInput(CreateNoteScreenContract.Inputs.ChangeNote(it))
-                    })
+                    },
+                )
 
                 Button(
                     onClick = {
@@ -81,3 +87,11 @@ fun CreateNoteScreen(
 data class CardViewActions(
    val onCardClickAction: () -> Unit
 )
+
+@Preview
+@Composable
+fun CreateNoteScreenPreview() {
+    val state = CreateNoteScreenContract.State()
+    val input = CreateNoteScreenContract.Inputs.CreateNote
+    CreateNoteScreen(state = state, postInput = {input})
+}
